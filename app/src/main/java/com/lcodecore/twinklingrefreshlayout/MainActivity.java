@@ -1,17 +1,14 @@
 package com.lcodecore.twinklingrefreshlayout;
 
-import android.content.Context;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends BaseActivity {
@@ -26,99 +23,47 @@ public class MainActivity extends BaseActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        RecyclerView rv = (RecyclerView) findViewById(R.id.recyclerview);
-        setupRecyclerView(rv);
+        List<Fragment> fragments = new ArrayList<>();
+        fragments.add(new RecyclerFragment());
+        fragments.add(new ListViewFragment());
+        fragments.add(new GridViewFragment());
+        fragments.add(new ScrollViewFragment());
+
+        String tabTitles[] = new String[]{"RecyclerView", "ListView", "GridView","ScrollView"};
+        List<String> titles = Arrays.asList(tabTitles);
+
+        TKFragmentPagerAdapter pagerAdapter = new TKFragmentPagerAdapter(getSupportFragmentManager(),fragments,titles);
+        ViewPager pager = (ViewPager) findViewById(R.id.pager);
+        pager.setAdapter(pagerAdapter);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        tabLayout.setupWithViewPager(pager);
     }
 
-    private void setupRecyclerView(RecyclerView recyclerView) {
-        recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
-        recyclerView.setAdapter(new SimpleStringRecyclerViewAdapter(this));
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-    }
+    class TKFragmentPagerAdapter extends FragmentPagerAdapter {
 
-    public class SimpleStringRecyclerViewAdapter
-            extends RecyclerView.Adapter<SimpleStringRecyclerViewAdapter.ViewHolder> {
+        List<Fragment> fragments;
+        List<String> titles;
 
-        List<Card> cards = new ArrayList<>();
-
-        private void addCard() {
-            for (int i = 0; i < 8; i++) {
-                Card card = new Card();
-                switch (i) {
-                    case 0:
-                        card.setTitle("God of Light", "点亮世界之光");
-                        card.imageSrc = R.drawable.card_cover1;
-                        break;
-                    case 1:
-                        card.setTitle("我的手机与众不同", "专题");
-                        card.imageSrc = R.drawable.card_cover2;
-                        break;
-                    case 2:
-                        card.setTitle("BlackLight", "做最纯粹的微博客户端");
-                        card.imageSrc = R.drawable.card_cover3;
-                        break;
-                    case 3:
-                        card.setTitle("BuzzFeed", "最好玩的新闻在这里");
-                        card.imageSrc = R.drawable.card_cover4;
-                        break;
-                    case 4:
-                        card.setTitle("Nester", "专治各种熊孩子");
-                        card.imageSrc = R.drawable.card_cover5;
-                        break;
-                    case 5:
-                        card.setTitle("二次元专题", "啊喂，别总想去四维空间啦");
-                        card.imageSrc = R.drawable.card_cover6;
-                        break;
-                    case 6:
-                        card.setTitle("Music Player", "闻其名，余音绕梁");
-                        card.imageSrc = R.drawable.card_cover7;
-                        break;
-                    case 7:
-                        card.setTitle("el", "剪纸人の唯美旅程");
-                        card.imageSrc = R.drawable.card_cover8;
-                        break;
-                }
-                cards.add(card);
-            }
-        }
-
-
-        public class ViewHolder extends RecyclerView.ViewHolder {
-
-            public final ImageView mImageView;
-            public final TextView tv_title;
-            public final TextView tv_subTitle;
-
-            public ViewHolder(View view) {
-                super(view);
-                mImageView = (ImageView) view.findViewById(R.id.iv_cover);
-                tv_title = (TextView) view.findViewById(R.id.tv_title);
-                tv_subTitle = (TextView) view.findViewById(R.id.tv_subtitle);
-            }
-        }
-
-        public SimpleStringRecyclerViewAdapter(Context context) {
-            super();
-            addCard();
+        public TKFragmentPagerAdapter(FragmentManager fm,List<Fragment> fragments,List<String> titles) {
+            super(fm);
+            this.fragments =fragments;
+            this.titles = titles;
         }
 
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.list_item, parent, false);
-            return new ViewHolder(view);
+        public Fragment getItem(int position) {
+            return fragments.get(position);
         }
 
         @Override
-        public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.tv_title.setText(cards.get(position).title);
-            holder.tv_subTitle.setText(cards.get(position).info);
-            holder.mImageView.setImageResource(cards.get(position).imageSrc);
+        public int getCount() {
+            return fragments.size();
         }
 
         @Override
-        public int getItemCount() {
-            return cards.size();
+        public CharSequence getPageTitle(int position) {
+            return titles.get(position);
         }
     }
+
 }

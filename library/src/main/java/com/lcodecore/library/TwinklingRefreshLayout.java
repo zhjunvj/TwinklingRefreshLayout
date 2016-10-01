@@ -6,12 +6,16 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Build;
 import android.os.Handler;
+import android.support.v4.view.VelocityTrackerCompat;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.MotionEvent;
+import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
@@ -81,16 +85,18 @@ public class TwinklingRefreshLayout extends FrameLayout {
         init();
         Log.i("cjj", "init");
 
-        TypedArray a = context.obtainStyledAttributes(attrs,R.styleable.TwinklingRefreshLayout,defStyleAttr,0);
-        mWaveHeight = a.getDimensionPixelSize(R.styleable.TwinklingRefreshLayout_tr_wave_height,(int)dp2sp(120));
-        mHeadHeight = a.getDimensionPixelSize(R.styleable.TwinklingRefreshLayout_tr_head_height,(int)dp2sp(80));
-        mBottomHeight = a.getDimensionPixelSize(R.styleable.TwinklingRefreshLayout_tr_bottom_height,(int)dp2sp(60));
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.TwinklingRefreshLayout, defStyleAttr, 0);
+        mWaveHeight = a.getDimensionPixelSize(R.styleable.TwinklingRefreshLayout_tr_wave_height, (int) dp2sp(120));
+        mHeadHeight = a.getDimensionPixelSize(R.styleable.TwinklingRefreshLayout_tr_head_height, (int) dp2sp(80));
+        mBottomHeight = a.getDimensionPixelSize(R.styleable.TwinklingRefreshLayout_tr_bottom_height, (int) dp2sp(60));
         a.recycle();
     }
 
     /**
      * 初始化
      */
+    RoundDotView roundDotView;
+
     private void init() {
         //使用isInEditMode解决可视化编辑器无法识别自定义控件的问题
         if (isInEditMode()) {
@@ -105,7 +111,7 @@ public class TwinklingRefreshLayout extends FrameLayout {
         decelerateInterpolator = new DecelerateInterpolator(10);
 
         //设置头部和底部View
-        final RoundDotView roundDotView = new RoundDotView(getContext());
+        roundDotView = new RoundDotView(getContext());
         ProgressView progressView = new ProgressView(getContext());
         progressView.setIndicatorId(ProgressView.BallPulse);
         progressView.setIndicatorColor(getResources().getColor(R.color.Orange));
@@ -116,8 +122,8 @@ public class TwinklingRefreshLayout extends FrameLayout {
             @Override
             public void onPullingDown(TwinklingRefreshLayout refreshLayout, float fraction) {
 //                Toast.makeText(getContext(), "下拉", Toast.LENGTH_SHORT).show();
-                roundDotView.setScaleX(1+fraction);
-                roundDotView.setScaleY(1+fraction);
+                roundDotView.setScaleX(1 + fraction);
+                roundDotView.setScaleY(1 + fraction);
 //                roundDotView.animate().scaleX(1+fraction).scaleY(1+fraction).start();
             }
 
@@ -136,6 +142,7 @@ public class TwinklingRefreshLayout extends FrameLayout {
             @Override
             public void onRefresh(TwinklingRefreshLayout refreshLayout) {
                 roundDotView.startAnim();
+                //TODO
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -147,6 +154,7 @@ public class TwinklingRefreshLayout extends FrameLayout {
             @Override
             public void onLoadMore(TwinklingRefreshLayout refreshLayout) {
 //                progressView.setAnimStart();
+                //TODO
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -156,6 +164,18 @@ public class TwinklingRefreshLayout extends FrameLayout {
             }
         });
     }
+
+
+    private float mVelocityY;
+    GestureDetector gestureDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            mVelocityY = velocityY;
+            return false;
+        }
+    });
+
 
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
@@ -192,6 +212,31 @@ public class TwinklingRefreshLayout extends FrameLayout {
             return;
         }
 
+        mChildView.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return gestureDetector.onTouchEvent(event);
+            }
+        });
+
+        ((RecyclerView) mChildView).addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                if (newState==RecyclerView.SCROLL_STATE_IDLE && mVelocityY>=5000 &&ScrollingUtil.isRecyclerViewToTop((RecyclerView) mChildView)){
+                    System.out.println("滚动到顶部了。。。");
+
+                    mChildView.animate().translationY(mHeadHeight).setDuration(150).start();
+                    mChildView.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            mChildView.animate().translationY(0).start();
+                        }
+                    },150);
+                }
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+        });
+
         mChildView.animate().setInterpolator(new DecelerateInterpolator());//设置速率为递减
         mChildView.animate().setUpdateListener(//通过addUpdateListener()方法来添加一个动画的监听器
                 new ValueAnimator.AnimatorUpdateListener() {
@@ -200,14 +245,14 @@ public class TwinklingRefreshLayout extends FrameLayout {
                         int height = (int) mChildView.getTranslationY();//获得mChildView当前y的位置
                         height = Math.abs(height);
 
-                        Log.i("cjj", "mChildView.getTranslationY----------->" + height);
-                        if(state==PULL_DOWN_REFRESH){
+                        //Log.i("cjj", "mChildView.getTranslationY----------->" + height);
+                        if (state == PULL_DOWN_REFRESH) {
                             mHeadLayout.getLayoutParams().height = height;
                             mHeadLayout.requestLayout();//重绘
                             if (pullListener != null) {
                                 pullListener.onPullReleasing(TwinklingRefreshLayout.this, height / mHeadHeight);
                             }
-                        }else{
+                        } else {
                             mBottomLayout.getLayoutParams().height = height;
                             mBottomLayout.requestLayout();
                             if (pullListener != null) {
@@ -231,19 +276,19 @@ public class TwinklingRefreshLayout extends FrameLayout {
      * 或者子列表空间到达了底部(hasComeToBottom)
      * 时拦截事件(拒绝子View操作)
      */
+
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        if (isRefreshing) return true;
-        if (isLoadingmore) return true;
+        // if (isRefreshing) return true;
+        //if (isLoadingmore) return true;
 
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 mTouchY = ev.getY();
-                mCurrentY = mTouchY;
                 break;
             case MotionEvent.ACTION_MOVE:
-                float currentY = ev.getY();
-                float dy = currentY - mTouchY;
+                float dy = ev.getY() - mTouchY;
+
                 if (dy > 0 && !canChildScrollUp()) {
                     state = PULL_DOWN_REFRESH;
                     System.out.println("下拉刷新状态");
@@ -259,7 +304,7 @@ public class TwinklingRefreshLayout extends FrameLayout {
     }
 
     /**
-     * 响应事件
+     * 父View响应事件
      *
      * @param e
      * @return
@@ -284,7 +329,7 @@ public class TwinklingRefreshLayout extends FrameLayout {
                     dy = Math.min(mWaveHeight * 2, dy);
                     dy = Math.max(0, dy);
 
-                    System.out.println("dy的值是:" + dy + "下拉部分");
+                    //System.out.println("dy的值是:" + dy + "下拉部分");
 
                     if (mChildView != null) {
                         float offsetY = decelerateInterpolator.getInterpolation(dy / mWaveHeight / 2) * dy / 2;
@@ -319,7 +364,7 @@ public class TwinklingRefreshLayout extends FrameLayout {
             case MotionEvent.ACTION_UP:
                 if (mChildView != null) {
                     if (state == PULL_DOWN_REFRESH) {
-                        if (mChildView.getTranslationY() >= mHeadHeight-15) {
+                        if (mChildView.getTranslationY() >= mHeadHeight - 15) {
                             System.out.println("进入刷新状态...");
                             mChildView.animate().translationY(mHeadHeight).start();//回到限制的最大高度处
                             System.out.println("mChildView应该执行动画");
@@ -332,7 +377,7 @@ public class TwinklingRefreshLayout extends FrameLayout {
                             mChildView.animate().translationY(0).start();
                         }
                     } else {
-                        if (Math.abs(mChildView.getTranslationY()) >= mBottomHeight-15) {
+                        if (Math.abs(mChildView.getTranslationY()) >= mBottomHeight - 15) {
                             isLoadingmore = true;
                             mChildView.animate().translationY(-mBottomHeight).start();
                             if (refreshListener != null) {
@@ -345,11 +390,12 @@ public class TwinklingRefreshLayout extends FrameLayout {
                 }
                 return true;
         }
+
         return super.onTouchEvent(e);
     }
 
     /**
-     * 用来判断是否可以上拉
+     * 用来判断是否可以下拉
      *
      * @return boolean
      */
@@ -479,11 +525,11 @@ public class TwinklingRefreshLayout extends FrameLayout {
         this.mBottomHeight = bottomHeight;
     }
 
-    public void setEnableLoadmore(boolean enableLoadmore1){
+    public void setEnableLoadmore(boolean enableLoadmore1) {
         enableLoadmore = enableLoadmore1;
     }
 
-    public float dp2sp(float dp){
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,dp,getResources().getDisplayMetrics());
+    public float dp2sp(float dp) {
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, getResources().getDisplayMetrics());
     }
 }

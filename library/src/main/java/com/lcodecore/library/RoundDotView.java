@@ -9,10 +9,12 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 
+import com.lcodecore.library.v2.IHeaderView;
+
 /**
  * Created by cjj on 2015/8/27.
  */
-public class RoundDotView extends View {
+public class RoundDotView extends View implements IHeaderView {
     private Paint mPath;
     private float r = 12;
     private int num = 5;
@@ -61,27 +63,27 @@ public class RoundDotView extends View {
                     case 0:
                         mPath.setAlpha(105);
                         mPath.setColor(getResources().getColor(R.color.Yellow));
-                        canvas.drawCircle(getMeasuredWidth() / 2 - cir_x * 2 - 2 * w / 3 * 2, getMeasuredHeight() / 2, r*fraction2, mPath);
+                        canvas.drawCircle(getMeasuredWidth() / 2 - cir_x * 2 - 2 * w / 3 * 2, getMeasuredHeight() / 2, r * fraction2, mPath);
                         break;
                     case 1:
                         mPath.setAlpha(145);
                         mPath.setColor(getResources().getColor(R.color.Green));
-                        canvas.drawCircle(getMeasuredWidth() / 2 - cir_x * 1 - w / 3 * 2, getMeasuredHeight() / 2, r*fraction2, mPath);
+                        canvas.drawCircle(getMeasuredWidth() / 2 - cir_x * 1 - w / 3 * 2, getMeasuredHeight() / 2, r * fraction2, mPath);
                         break;
                     case 2:
                         mPath.setAlpha(255);
                         mPath.setColor(getResources().getColor(R.color.Blue));
-                        canvas.drawCircle(getMeasuredWidth() / 2, getMeasuredHeight() / 2, r*fraction1, mPath);
+                        canvas.drawCircle(getMeasuredWidth() / 2, getMeasuredHeight() / 2, r * fraction1, mPath);
                         break;
                     case 3:
                         mPath.setAlpha(145);
                         mPath.setColor(getResources().getColor(R.color.Orange));
-                        canvas.drawCircle(getMeasuredWidth() / 2 + cir_x * 1 + w / 3 * 2, getMeasuredHeight() / 2, r*fraction2, mPath);
+                        canvas.drawCircle(getMeasuredWidth() / 2 + cir_x * 1 + w / 3 * 2, getMeasuredHeight() / 2, r * fraction2, mPath);
                         break;
                     case 4:
                         mPath.setAlpha(105);
                         mPath.setColor(getResources().getColor(R.color.Yellow));
-                        canvas.drawCircle(getMeasuredWidth() / 2 + cir_x * 2 + 2 * w / 3 * 2, getMeasuredHeight() / 2, r*fraction2, mPath);
+                        canvas.drawCircle(getMeasuredWidth() / 2 + cir_x * 2 + 2 * w / 3 * 2, getMeasuredHeight() / 2, r * fraction2, mPath);
                         break;
 //                    case 6:
 //                        mPath.setAlpha(35);
@@ -131,9 +133,27 @@ public class RoundDotView extends View {
         }
     }
 
+    @Override
+    public View getView() {
+        return this;
+    }
+
+    @Override
+    public void onPullingDown(float fraction) {
+        System.out.println("下拉参数是:"+fraction);
+        setScaleX(1 + fraction);
+        setScaleY(1 + fraction);
+    }
+
+    @Override
+    public void onPullReleasing(float fraction) {
+
+    }
+
+    @Override
     public void startAnim() {
         animating = true;
-        ValueAnimator animator = ValueAnimator.ofFloat(1f, 1.3f,1f,0.8f);
+        ValueAnimator animator = ValueAnimator.ofFloat(1f, 1.3f, 1f, 0.8f);
         animator.setDuration(800);
         animator.setInterpolator(new DecelerateInterpolator());
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -148,7 +168,7 @@ public class RoundDotView extends View {
         animator.start();
 
 
-        ValueAnimator animator1 = ValueAnimator.ofFloat(1f,0.8f,1f,1.3f);
+        ValueAnimator animator1 = ValueAnimator.ofFloat(1f, 0.8f, 1f, 1.3f);
         animator1.setDuration(800);
         animator1.setInterpolator(new DecelerateInterpolator());
         animator1.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
