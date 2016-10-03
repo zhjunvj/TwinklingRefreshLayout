@@ -1,6 +1,7 @@
 # TwinklingRefreshLayout
 
 TwinklingRefreshLayout延伸了Google的SwipeRefreshLayout的思想,不在列表控件上动刀,而是使用一个ViewGroup来包含列表控件,以保持其较低的耦合性和较高的通用性。其主要特性有：
+
 1. 支持RecyclerView、ScrollView、AbsListView系列(ListView、GridView)、WebView以及其它可以获取到scrollY的控件
 2. 支持加载更多
 3. 默认支持 **越界回弹**
