@@ -5,8 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +13,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.lcodecore.library.v2.TwinklingRefreshLayout;
+import com.lcodecore.tkrefreshlayout.header.bezierlayout.BezierLayout;
+import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,12 +45,14 @@ public class RecyclerFragment extends Fragment {
     }
 
     private void setupRecyclerView(RecyclerView recyclerView) {
-        recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
+        recyclerView.setLayoutManager(new GridLayoutManager(recyclerView.getContext(),2));
         recyclerView.setAdapter(new SimpleStringRecyclerViewAdapter(getContext()));
         TwinklingRefreshLayout refreshLayout = (TwinklingRefreshLayout) rootView.findViewById(R.id.refresh);
-        //TODO loadmore隐藏可能有bug
-        TextHeaderView headerView = (TextHeaderView) View.inflate(getContext(),R.layout.header_tv,null);
+        BezierLayout headerView = new BezierLayout(getContext());
         refreshLayout.setHeaderView(headerView);
+        //refreshLayout.setWaveHeight(180);
+        //refreshLayout.setHeaderHeight(100);
+        //refreshLayout.setPureScrollModeOn(true);
         //refreshLayout.setEnableLoadmore(false);
         refreshLayout.setOnRefreshListener(new TwinklingRefreshLayout.OnRefreshListener(){
             @Override

@@ -1,4 +1,4 @@
-package com.lcodecore.library;
+package com.lcodecore.tkrefreshlayout.header;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
@@ -9,12 +9,14 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 
-import com.lcodecore.library.v2.IHeaderView;
+import com.lcodecore.tkrefreshlayout.R;
+import com.lcodecore.tkrefreshlayout.IHeaderView;
 
 /**
- * Created by cjj on 2015/8/27.
+ * Created by lcodecore on 2016/10/2.
  */
-public class RoundDotView extends View implements IHeaderView {
+
+public class GoogleDotView extends View implements IHeaderView {
     private Paint mPath;
     private float r = 12;
     private int num = 5;
@@ -29,23 +31,50 @@ public class RoundDotView extends View implements IHeaderView {
     float fraction2;
     boolean animating = false;
 
-    public RoundDotView(Context context) {
+    public GoogleDotView(Context context) {
         this(context, null, 0);
     }
 
-    public RoundDotView(Context context, AttributeSet attrs) {
+    public GoogleDotView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public RoundDotView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public GoogleDotView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
+
+    ValueAnimator animator1, animator2;
 
     private void init() {
         mPath = new Paint();
         mPath.setAntiAlias(true);
         mPath.setColor(Color.rgb(114, 114, 114));
+
+        animator1 = ValueAnimator.ofFloat(1f, 1.2f, 1f, 0.8f);
+        animator1.setDuration(800);
+        animator1.setInterpolator(new DecelerateInterpolator());
+        animator1.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                fraction1 = (float) animation.getAnimatedValue();
+                invalidate();
+            }
+        });
+        animator1.setRepeatCount(ValueAnimator.INFINITE);
+        animator1.setRepeatMode(ValueAnimator.REVERSE);
+
+        animator2 = ValueAnimator.ofFloat(1f, 0.8f, 1f, 1.2f);
+        animator2.setDuration(800);
+        animator2.setInterpolator(new DecelerateInterpolator());
+        animator2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                fraction2 = (float) animation.getAnimatedValue();
+            }
+        });
+        animator2.setRepeatCount(ValueAnimator.INFINITE);
+        animator2.setRepeatMode(ValueAnimator.REVERSE);
     }
 
     @Override
@@ -55,11 +84,11 @@ public class RoundDotView extends View implements IHeaderView {
         for (int i = 0; i < num; i++) {
             if (animating) {
                 switch (i) {
-//                    case 0:
-//                        mPath.setAlpha(35);
-//                        mPath.setColor(getResources().getColor(R.color.Orange));
-//                        canvas.drawCircle(getMeasuredWidth() / 2 - cir_x * 3 - 3 * w / 3 * 2, getMeasuredHeight() / 2, r*fraction2, mPath);
-//                        break;
+                    //                    case 0:
+                    //                        mPath.setAlpha(35);
+                    //                        mPath.setColor(getResources().getColor(R.color.Orange));
+                    //                        canvas.drawCircle(getMeasuredWidth() / 2 - cir_x * 3 - 3 * w / 3 * 2, getMeasuredHeight() / 2, r*fraction2, mPath);
+                    //                        break;
                     case 0:
                         mPath.setAlpha(105);
                         mPath.setColor(getResources().getColor(R.color.Yellow));
@@ -85,19 +114,19 @@ public class RoundDotView extends View implements IHeaderView {
                         mPath.setColor(getResources().getColor(R.color.Yellow));
                         canvas.drawCircle(getMeasuredWidth() / 2 + cir_x * 2 + 2 * w / 3 * 2, getMeasuredHeight() / 2, r * fraction2, mPath);
                         break;
-//                    case 6:
-//                        mPath.setAlpha(35);
-//                        mPath.setColor(getResources().getColor(R.color.Green));
-//                        canvas.drawCircle(getMeasuredWidth() / 2 + cir_x * 3 + 3 * w / 3 * 2, getMeasuredHeight() / 2, r*fraction2, mPath);
-//                        break;
+                    //                    case 6:
+                    //                        mPath.setAlpha(35);
+                    //                        mPath.setColor(getResources().getColor(R.color.Green));
+                    //                        canvas.drawCircle(getMeasuredWidth() / 2 + cir_x * 3 + 3 * w / 3 * 2, getMeasuredHeight() / 2, r*fraction2, mPath);
+                    //                        break;
                 }
             } else {
                 switch (i) {
-//                    case 0:
-//                        mPath.setAlpha(35);
-//                        mPath.setColor(getResources().getColor(R.color.Orange));
-//                        canvas.drawCircle(getMeasuredWidth() / 2 - cir_x * 3 - 3 * w / 3 * 2, getMeasuredHeight() / 2, r, mPath);
-//                        break;
+                    //                    case 0:
+                    //                        mPath.setAlpha(35);
+                    //                        mPath.setColor(getResources().getColor(R.color.Orange));
+                    //                        canvas.drawCircle(getMeasuredWidth() / 2 - cir_x * 3 - 3 * w / 3 * 2, getMeasuredHeight() / 2, r, mPath);
+                    //                        break;
                     case 0:
                         mPath.setAlpha(105);
                         mPath.setColor(getResources().getColor(R.color.Yellow));
@@ -123,11 +152,11 @@ public class RoundDotView extends View implements IHeaderView {
                         mPath.setColor(getResources().getColor(R.color.Yellow));
                         canvas.drawCircle(getMeasuredWidth() / 2 + cir_x * 2 + 2 * w / 3 * 2, getMeasuredHeight() / 2, r, mPath);
                         break;
-//                    case 6:
-//                        mPath.setAlpha(35);
-//                        mPath.setColor(getResources().getColor(R.color.Green));
-//                        canvas.drawCircle(getMeasuredWidth() / 2 + cir_x * 3 + 3 * w / 3 * 2, getMeasuredHeight() / 2, r, mPath);
-//                        break;
+                    //                    case 6:
+                    //                        mPath.setAlpha(35);
+                    //                        mPath.setColor(getResources().getColor(R.color.Green));
+                    //                        canvas.drawCircle(getMeasuredWidth() / 2 + cir_x * 3 + 3 * w / 3 * 2, getMeasuredHeight() / 2, r, mPath);
+                    //                        break;
                 }
             }
         }
@@ -139,47 +168,41 @@ public class RoundDotView extends View implements IHeaderView {
     }
 
     @Override
-    public void onPullingDown(float fraction) {
-        System.out.println("下拉参数是:"+fraction);
-        setScaleX(1 + fraction);
-        setScaleY(1 + fraction);
+    public void onPullingDown(float fraction, float maxHeadHeight, float headHeight) {
+        setScaleX(1 + fraction / 4);
+        setScaleY(1 + fraction / 4);
+        animating = false;
+        if (animator1.isRunning()) {
+            animator1.cancel();
+            invalidate();
+        }
+        if (animator2.isRunning()) animator1.cancel();
     }
 
     @Override
-    public void onPullReleasing(float fraction) {
-
-    }
-
-    @Override
-    public void startAnim() {
-        animating = true;
-        ValueAnimator animator = ValueAnimator.ofFloat(1f, 1.3f, 1f, 0.8f);
-        animator.setDuration(800);
-        animator.setInterpolator(new DecelerateInterpolator());
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                fraction1 = (float) animation.getAnimatedValue();
+    public void onPullReleasing(float fraction, float maxHeadHeight, float headHeight) {
+        setScaleX(1 + fraction / 4);
+        setScaleY(1 + fraction / 4);
+        if (fraction < 1.0f) {
+            animating = false;
+            if (animator1.isRunning()) {
+                animator1.cancel();
                 invalidate();
             }
-        });
-        animator.setRepeatCount(ValueAnimator.INFINITE);
-        animator.setRepeatMode(ValueAnimator.REVERSE);
-        animator.start();
-
-
-        ValueAnimator animator1 = ValueAnimator.ofFloat(1f, 0.8f, 1f, 1.3f);
-        animator1.setDuration(800);
-        animator1.setInterpolator(new DecelerateInterpolator());
-        animator1.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                fraction2 = (float) animation.getAnimatedValue();
-            }
-        });
-        animator1.setRepeatCount(ValueAnimator.INFINITE);
-        animator1.setRepeatMode(ValueAnimator.REVERSE);
-        animator1.start();
+            if (animator2.isRunning()) animator1.cancel();
+        }
     }
 
+
+    @Override
+    public void startAnim(float maxHeadHeight, float headHeight) {
+        animating = true;
+        animator1.start();
+        animator2.start();
+    }
+
+    @Override
+    public void onFinish() {
+
+    }
 }

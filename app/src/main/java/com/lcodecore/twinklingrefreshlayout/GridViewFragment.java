@@ -11,7 +11,9 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.lcodecore.library.v2.TwinklingRefreshLayout;
+import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
+import com.lcodecore.tkrefreshlayout.Footer.LoadingView;
+import com.lcodecore.tkrefreshlayout.header.SinaRefreshView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,10 +44,12 @@ public class GridViewFragment extends Fragment {
 
     private void setupGridView(GridView gridView) {
         TwinklingRefreshLayout refreshLayout = (TwinklingRefreshLayout) rootView.findViewById(R.id.refresh);
-        TextHeaderView headerView = (TextHeaderView) View.inflate(getContext(),R.layout.header_tv,null);
+        //TextHeaderView headerView = (TextHeaderView) View.inflate(getContext(),R.layout.header_tv,null);
+        SinaRefreshView headerView = new SinaRefreshView(getContext());
         refreshLayout.setHeaderView(headerView);
-        //TODO loadmore隐藏可能有bug
-        //refreshLayout.setEnableLoadmore(false);
+
+        LoadingView loadingView = new LoadingView(getContext());
+        refreshLayout.setBottomView(loadingView);
 
         gridView.setAdapter(new SimpleAdapter());
     }

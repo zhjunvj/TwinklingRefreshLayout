@@ -28,8 +28,9 @@ public class MainActivity extends BaseActivity {
         fragments.add(new ListViewFragment());
         fragments.add(new GridViewFragment());
         fragments.add(new ScrollViewFragment());
+        fragments.add(new WebViewFragment());
 
-        String tabTitles[] = new String[]{"RecyclerView", "ListView", "GridView","ScrollView"};
+        String tabTitles[] = new String[]{"RecyclerView", "ListView", "GridView","ScrollView","WebView"};
         List<String> titles = Arrays.asList(tabTitles);
 
         TKFragmentPagerAdapter pagerAdapter = new TKFragmentPagerAdapter(getSupportFragmentManager(),fragments,titles);

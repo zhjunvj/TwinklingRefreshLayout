@@ -1,6 +1,5 @@
 package com.lcodecore.twinklingrefreshlayout;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,8 +10,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import com.lcodecore.library.v2.TwinklingRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,10 +39,7 @@ public class ListViewFragment extends Fragment {
     }
 
     private void setupListView(ListView listView) {
-        TwinklingRefreshLayout refreshLayout = (TwinklingRefreshLayout) rootView.findViewById(R.id.refresh);
-        TextHeaderView headerView = (TextHeaderView) View.inflate(getContext(),R.layout.header_tv,null);
-        refreshLayout.setHeaderView(headerView);
-        //TODO loadmore隐藏可能有bug
+        //TwinklingRefreshLayout refreshLayout = (TwinklingRefreshLayout) rootView.findViewById(R.id.refresh);
         //refreshLayout.setEnableLoadmore(false);
 
         listView.setAdapter(new SimpleAdapter());

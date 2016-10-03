@@ -1,4 +1,4 @@
-package com.lcodecore.library;
+package com.lcodecore.tkrefreshlayout.Footer;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -11,6 +11,7 @@ import android.support.annotation.IntDef;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.lcodecore.tkrefreshlayout.R;
 import com.wang.avi.indicator.BallBeatIndicator;
 import com.wang.avi.indicator.BallClipRotateIndicator;
 import com.wang.avi.indicator.BallClipRotateMultipleIndicator;
@@ -110,7 +111,7 @@ public class ProgressView extends View{
     public @interface Indicator{}
 
     //Sizes (with defaults in DP)
-    public static final int DEFAULT_SIZE=30;
+    public static final int DEFAULT_SIZE=50;
 
     //attrs
     int mIndicatorId;
@@ -260,8 +261,8 @@ public class ProgressView extends View{
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int width  = measureDimension(dp2px(DEFAULT_SIZE), widthMeasureSpec);
-        int height = measureDimension(dp2px(DEFAULT_SIZE), heightMeasureSpec);
+        int width  = dp2px(DEFAULT_SIZE);//measureDimension(dp2px(DEFAULT_SIZE), widthMeasureSpec);
+        int height = dp2px(DEFAULT_SIZE);//measureDimension(dp2px(DEFAULT_SIZE), heightMeasureSpec);
         setMeasuredDimension(width, height);
     }
 
@@ -306,6 +307,13 @@ public class ProgressView extends View{
         }
     }
 
+    public void stopAnim(){
+        mIndicatorController.setAnimationStatus(BaseIndicatorController.AnimStatus.END);
+    }
+    public void startAnim(){
+        mIndicatorController.setAnimationStatus(BaseIndicatorController.AnimStatus.CANCEL);
+    }
+
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
@@ -329,6 +337,4 @@ public class ProgressView extends View{
     private int dp2px(int dpValue) {
         return (int) getContext().getResources().getDisplayMetrics().density * dpValue;
     }
-
-
 }

@@ -5,7 +5,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
 
-import com.lcodecore.library.v2.IHeaderView;
+import com.lcodecore.tkrefreshlayout.IHeaderView;
 
 /**
  * Created by lcodecore on 2016/10/1.
@@ -32,18 +32,23 @@ public class TextHeaderView extends TextView implements IHeaderView {
     }
 
     @Override
-    public void onPullingDown(float fraction) {
-        setScaleX(1+fraction);
-        setScaleY(1+fraction);
+    public void onPullingDown(float fraction, float maxHeadHeight, float headHeight) {
+        if (fraction < 1f) setText("下拉刷新");
+        if (fraction > 1f) setText("释放刷新");
     }
 
     @Override
-    public void onPullReleasing(float fraction) {
-
+    public void onPullReleasing(float fraction, float maxHeadHeight, float headHeight) {
+        if (fraction < 1f) setText("下拉刷新");
     }
 
     @Override
-    public void startAnim() {
+    public void startAnim(float maxHeadHeight, float headHeight) {
+        setText("正在刷新");
+    }
+
+    @Override
+    public void onFinish() {
 
     }
 }

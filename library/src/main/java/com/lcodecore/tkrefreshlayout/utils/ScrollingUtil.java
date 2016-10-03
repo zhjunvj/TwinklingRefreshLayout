@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.lcodecore.library;
+package com.lcodecore.tkrefreshlayout.utils;
 
 import android.content.Context;
 import android.graphics.Rect;
@@ -24,7 +24,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.DisplayMetrics;
 import android.view.View;
-import android.view.ViewParent;
 import android.view.WindowManager;
 import android.webkit.WebView;
 import android.widget.AbsListView;
@@ -32,12 +31,6 @@ import android.widget.ScrollView;
 
 import java.lang.reflect.Field;
 
-
-/**
- * 作者:王浩 邮件:bingoogolapple@gmail.com
- * 创建时间:15/10/28 上午2:26
- * 描述:
- */
 public class ScrollingUtil {
 
     private ScrollingUtil() {
