@@ -18,7 +18,7 @@ TwinklingRefreshLayout延伸了Google的SwipeRefreshLayout的思想,不在列表
 #### 1.添加gradle依赖
 将libray模块复制到项目中,或者直接在build.gradle中依赖:
 ```
-compile 'com.lcodecorex:tkrefreshlayout:1.0.1'
+compile 'com.lcodecorex:tkrefreshlayout:1.0.2'
 ```
 
 #### 2.在xml中添加TwinklingRefreshLayout
