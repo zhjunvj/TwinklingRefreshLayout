@@ -26,6 +26,9 @@ import com.lcodecore.tkrefreshlayout.utils.ScrollingUtil;
 import com.lcodecore.tkrefreshlayout.Footer.BottomProgressView;
 import com.lcodecore.tkrefreshlayout.header.GoogleDotView;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 /**
  * Created by lcodecore on 16/3/2.
  */
@@ -553,6 +556,7 @@ public class TwinklingRefreshLayout extends FrameLayout {
         if (pullListener != null) pullListener.onFinishLoadMore();
         if (mChildView != null) {
             animChildView(0f);
+            mChildView.scrollBy(0, (int) mBottomHeight);
             mBottomLayout.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -562,7 +566,6 @@ public class TwinklingRefreshLayout extends FrameLayout {
                     }
                 }
             }, 250);
-
         }
         isLoadingmore = false;
     }
