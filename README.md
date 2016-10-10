@@ -225,3 +225,4 @@ startAnim则是在onRefresh/onLoadMore之后才会回调的过程（此处是显
 - 优化代码质量。
 - 制作一个star相关的动效。
 - 对回弹效果做一下优化，比如支持使用不同的插值器
+- 带视差效果的Header

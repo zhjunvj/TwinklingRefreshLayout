@@ -18,8 +18,11 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
+import android.webkit.WebView;
 import android.widget.AbsListView;
 import android.widget.FrameLayout;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import com.lcodecore.tkrefreshlayout.utils.DensityUtil;
 import com.lcodecore.tkrefreshlayout.utils.ScrollingUtil;
@@ -47,6 +50,9 @@ public class TwinklingRefreshLayout extends FrameLayout {
 
     //头部的高度
     protected float mHeadHeight;
+
+    //允许的越界回弹的高度
+    protected float mOverScrollHeight;
 
     //子控件
     private View mChildView;
@@ -103,6 +109,7 @@ public class TwinklingRefreshLayout extends FrameLayout {
         mWaveHeight = a.getDimensionPixelSize(R.styleable.TwinklingRefreshLayout_tr_wave_height, (int) DensityUtil.dp2px(context, 120));
         mHeadHeight = a.getDimensionPixelSize(R.styleable.TwinklingRefreshLayout_tr_head_height, (int) DensityUtil.dp2px(context, 80));
         mBottomHeight = a.getDimensionPixelSize(R.styleable.TwinklingRefreshLayout_tr_bottom_height, (int) DensityUtil.dp2px(context, 60));
+        mOverScrollHeight = a.getDimensionPixelSize(R.styleable.TwinklingRefreshLayout_tr_overscroll_height,(int) DensityUtil.dp2px(context, 80));
         a.recycle();
     }
 
@@ -156,7 +163,7 @@ public class TwinklingRefreshLayout extends FrameLayout {
             this.addView(mBottomLayout);
 
             if (mBottomView == null) {
-                BottomProgressView mProgressView = new BottomProgressView(getContext());//(BottomProgressView) View.inflate(getContext(), R.layout.view_progress, null);
+                BottomProgressView mProgressView = new BottomProgressView(getContext());
                 setBottomView(mProgressView);
             }
         }
@@ -339,8 +346,8 @@ public class TwinklingRefreshLayout extends FrameLayout {
     private void animOverScrollTop() {
         mVelocityY = 0;
         state = PULL_DOWN_REFRESH;
-        if (isOverlayRefreshShow) animChildView(mHeadHeight, 150);
-        else mChildView.animate().translationY(mHeadHeight).setDuration(150).start();
+        if (isOverlayRefreshShow) animChildView(mOverScrollHeight, 150);
+        else mChildView.animate().translationY(mOverScrollHeight).setDuration(150).start();
         mChildView.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -353,8 +360,8 @@ public class TwinklingRefreshLayout extends FrameLayout {
     private void animOverScrollBottom() {
         mVelocityY = 0;
         state = PULL_UP_LOAD;
-        if (isOverlayRefreshShow) animChildView(-mHeadHeight, 150);
-        else mChildView.animate().translationY(-mHeadHeight).setDuration(150).start();
+        if (isOverlayRefreshShow) animChildView(-mOverScrollHeight, 150);
+        else mChildView.animate().translationY(-mOverScrollHeight).setDuration(150).start();
         mChildView.postDelayed(new Runnable() {
             @Override
             public void run() {
