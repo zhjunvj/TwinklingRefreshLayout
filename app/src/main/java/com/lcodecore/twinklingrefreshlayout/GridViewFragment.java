@@ -1,6 +1,7 @@
 package com.lcodecore.twinklingrefreshlayout;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -31,19 +32,13 @@ public class GridViewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.fragment_gridview, container, false);
+            setupGridView((GridView) rootView.findViewById(R.id.gridView));
         }
         return rootView;
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        setupGridView((GridView) rootView.findViewById(R.id.gridView));
-    }
-
     private void setupGridView(GridView gridView) {
-        TwinklingRefreshLayout refreshLayout = (TwinklingRefreshLayout) rootView.findViewById(R.id.refresh);
+        final TwinklingRefreshLayout refreshLayout = (TwinklingRefreshLayout) rootView.findViewById(R.id.refresh);
         //TextHeaderView headerView = (TextHeaderView) View.inflate(getContext(),R.layout.header_tv,null);
         SinaRefreshView headerView = new SinaRefreshView(getContext());
         refreshLayout.setHeaderView(headerView);
@@ -52,6 +47,18 @@ public class GridViewFragment extends Fragment {
         refreshLayout.setBottomView(loadingView);
 
         gridView.setAdapter(new SimpleAdapter());
+
+        refreshLayout.setOnRefreshListener(new TwinklingRefreshLayout.OnRefreshListener(){
+            @Override
+            public void onRefresh(final TwinklingRefreshLayout refreshLayout) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        refreshLayout.finishRefreshing();
+                    }
+                },2000);
+            }
+        });
     }
 
     public class SimpleAdapter extends BaseAdapter {

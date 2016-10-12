@@ -33,16 +33,10 @@ public class RecyclerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (rootView==null){
             rootView = inflater.inflate(R.layout.fragment_recycler,container,false);
+            RecyclerView rv = (RecyclerView) rootView.findViewById(R.id.recyclerview);
+            setupRecyclerView(rv);
         }
         return rootView;
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        RecyclerView rv = (RecyclerView) rootView.findViewById(R.id.recyclerview);
-        setupRecyclerView(rv);
     }
 
     private void setupRecyclerView(RecyclerView recyclerView) {

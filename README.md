@@ -226,3 +226,14 @@ startAnim则是在onRefresh/onLoadMore之后才会回调的过程（此处是显
 - 制作一个star相关的动效。
 - 对回弹效果做一下优化，比如支持使用不同的插值器
 - 带视差效果的Header
+
+## 更新日志
+#### v1.03
+- 扩展了更多的属性
+- 修复Fragment回收
+#### v1.02
+- 修复加载更多列表控件的显示问题
+#### v1.01
+- 支持了RecyclerView、ScrollView、AbsListView、WebView
+- 支持越界回弹
+- 支持个性化Header、Footer
