@@ -242,8 +242,10 @@ startAnim则是在onRefresh/onLoadMore之后才会回调的过程（此处是显
 - 可以灵活的设置是否禁用上下拉
 - 修复GridView滑动过程中出现的白条问题
 - Demo中添加轮播条展示
+
 #### v1.02
 - 修复加载更多列表控件的显示问题
+
 #### v1.01
 - 支持了RecyclerView、ScrollView、AbsListView、WebView
 - 支持越界回弹
