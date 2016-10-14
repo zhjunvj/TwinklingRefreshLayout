@@ -18,6 +18,7 @@ package com.lcodecore.tkrefreshlayout.utils;
 
 import android.content.Context;
 import android.graphics.Rect;
+import android.os.Build;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -27,15 +28,57 @@ import android.view.View;
 import android.view.WindowManager;
 import android.webkit.WebView;
 import android.widget.AbsListView;
+import android.widget.GridView;
+import android.widget.ListView;
 import android.widget.ScrollView;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 public class ScrollingUtil {
 
     private ScrollingUtil() {
     }
 
+    /**
+     * 用来判断是否可以下拉
+     */
+    public static boolean canChildScrollUp(View mChildView) {
+        if (mChildView == null) {
+            return false;
+        }
+        if (Build.VERSION.SDK_INT < 14) {
+            if (mChildView instanceof AbsListView) {
+                final AbsListView absListView = (AbsListView) mChildView;
+                return absListView.getChildCount() > 0
+                        && (absListView.getFirstVisiblePosition() > 0 || absListView.getChildAt(0)
+                        .getTop() < absListView.getPaddingTop());
+            } else {
+                return ViewCompat.canScrollVertically(mChildView, -1) || mChildView.getScrollY() > 0;
+            }
+        } else {
+            return ViewCompat.canScrollVertically(mChildView, -1);
+        }
+    }
+
+    /**
+     * Whether it is possible for the child view of this layout to scroll down. Override this if the child view is a custom view.
+     * 判断是否可以上拉
+     */
+    public static boolean canChildScrollDown(View mChildView) {
+        if (Build.VERSION.SDK_INT < 14) {
+            if (mChildView instanceof AbsListView) {
+                final AbsListView absListView = (AbsListView) mChildView;
+                return absListView.getChildCount() > 0
+                        && (absListView.getLastVisiblePosition() < absListView.getChildCount() - 1
+                        || absListView.getChildAt(absListView.getChildCount() - 1).getBottom() > absListView.getPaddingBottom());
+            } else {
+                return ViewCompat.canScrollVertically(mChildView, 1) || mChildView.getScrollY() < 0;
+            }
+        } else {
+            return ViewCompat.canScrollVertically(mChildView, 1);
+        }
+    }
 
     public static boolean isScrollViewOrWebViewToTop(View view) {
         return view != null && view.getScrollY() == 0;
@@ -182,6 +225,20 @@ public class ScrollingUtil {
             }
         }
         return false;
+    }
+
+    public static void scrollAViewBy(View view, int height) {
+        if (view instanceof RecyclerView) ((RecyclerView) view).smoothScrollBy(0, height);
+        else if (view instanceof ScrollView) ((ScrollView) view).smoothScrollBy(0, height);
+        else if (view instanceof AbsListView) ((AbsListView) view).smoothScrollBy(height, 150);
+        else {
+            try {
+                Method method = view.getClass().getDeclaredMethod("smoothScrollBy", Integer.class, Integer.class);
+                method.invoke(view, 0, height);
+            } catch (Exception e) {
+                view.scrollBy(0, height);
+            }
+        }
     }
 
 

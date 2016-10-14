@@ -18,7 +18,7 @@ TwinklingRefreshLayout延伸了Google的SwipeRefreshLayout的思想,不在列表
 #### 1.添加gradle依赖
 将libray模块复制到项目中,或者直接在build.gradle中依赖:
 ```
-compile 'com.lcodecorex:tkrefreshlayout:1.0.2'
+compile 'com.lcodecorex:tkrefreshlayout:1.0.3'
 ```
 
 #### 2.在xml中添加TwinklingRefreshLayout
@@ -73,6 +73,9 @@ refreshLayout.setOnRefreshListener(new TwinklingRefreshLayout.OnRefreshListener(
 - setHeaderHeight 头部固定高度(在此高度上显示刷新状态)
 - setBottomHeight 底部高度
 
+#### setEnableRefresh、setEnableLoadmore
+灵活的设置是否禁用上下拉。
+
 ##### setHeaderView(IHeaderView headerView)、setBottomView(IBottomView bottomView)
 设置头部/底部个性化刷新效果，头部需要实现IHeaderView，底部需要实现IBottomView。
 
@@ -82,13 +85,17 @@ refreshLayout.setOnRefreshListener(new TwinklingRefreshLayout.OnRefreshListener(
 ##### setPureScrollModeOn()
 开启纯净的越界回弹模式，也就是所有刷新相关的View都不显示，只显示越界回弹效果
 
-#### 4.几个属性
+#### 4.扩展属性
 - tr_wave_height 头部拉伸允许的最大高度
 - tr_head_height  头部高度
 - tr_bottom_height 底部高度
+- tr_overscroll_height 允许越界的最大高度
+- tr_enable_loadmore 是否允许加载更多,默认为true
+- tr_pureScrollMode_on 是否开启纯净的越界回弹模式
+- tr_show_overlay_refreshview 是否在越界的时候展示刷新控件
 
-将考虑添加更多的属性，比如可以在xml中设置header或者footer的布局。
-
+#### 5.在ViewPager+Fragment中使用的注意事项
+ViewPager默认最大加载3个Fragment,Fragment被切换到3个之外时,Fragment会调用onDestroyView()方法,当再次切换回来时,View会被重新创建。上一版的Demo有点小bug,目前都已修复。
 
 ## 其它说明
 ### 1.默认支持越界回弹
@@ -125,13 +132,13 @@ public interface IHeaderView {
 
 其中getView()方法用于在TwinklingRefreshLayout中获取到实际的Header,因此不能返回null。
 
-**实现像新浪微博那样的刷新效果**,实现代码如下:
+**实现像新浪微博那样的刷新效果**(有部分修改,具体请看源码),实现代码如下:
 
 1.首先定义SinaRefreshHeader继承自FrameLayout并实现IHeaderView方法
 
 2.getView()方法中返回this
 
-3.在onAttachedToWindow()方法中获取一下需要用到的布局
+3.在onAttachedToWindow()或者构造函数方法中获取一下需要用到的布局
 
 ```java
 @Override
@@ -220,17 +227,21 @@ startAnim则是在onRefresh/onLoadMore之后才会回调的过程（此处是显
 
 
 ## 剩余问题
-- Header或者Footer快速滚动时出现界面上残留有加载视图,解决方案有待优化（目前是通过设置LayoutParams.height=0的方式解决）。
-- 优化一下自定义的加载动效。
-- 优化代码质量。
 - 制作一个star相关的动效。
 - 对回弹效果做一下优化，比如支持使用不同的插值器
 - 带视差效果的Header
+- SwipeRefreshLayout风格的刷新View
+- 允许结束刷新/加载更多前先执行完自定义动画
 
 ## 更新日志
 #### v1.03
 - 扩展了更多的属性
-- 修复Fragment回收
+- 修复Fragment回收导致的空指针异常问题
+- 加入x方向判断,减小了滑动冲突
+- 优化加载更多列表显示问题
+- 可以灵活的设置是否禁用上下拉
+- 修复GridView滑动过程中出现的白条问题
+- Demo中添加轮播条展示
 #### v1.02
 - 修复加载更多列表控件的显示问题
 #### v1.01

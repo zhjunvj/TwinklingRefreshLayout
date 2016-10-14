@@ -90,8 +90,9 @@ public class BezierLayout extends FrameLayout implements IHeaderView{
 
                 /*处理圈圈**/
         r1.setCir_x((int) (30 * limitValue(1, fraction)));
-        r1.invalidate();
         r1.setVisibility(View.VISIBLE);
+        r1.invalidate();
+
         r2.setVisibility(View.GONE);
         r2.animate().scaleX((float) 0.1);
         r2.animate().scaleY((float) 0.1);
