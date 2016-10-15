@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import com.lcodecore.tkrefreshlayout.v3.TwinklingRefreshLayout;
+import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
 import com.lcodecore.twinklingrefreshlayout.adapter.SimpleAdapter;
 
 /**

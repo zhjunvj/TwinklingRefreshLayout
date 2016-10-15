@@ -11,7 +11,7 @@ import android.widget.GridView;
 
 import com.lcodecore.tkrefreshlayout.Footer.LoadingView;
 import com.lcodecore.tkrefreshlayout.header.SinaRefreshView;
-import com.lcodecore.tkrefreshlayout.v3.TwinklingRefreshLayout;
+import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
 import com.lcodecore.twinklingrefreshlayout.adapter.SimpleAdapter;
 
 /**

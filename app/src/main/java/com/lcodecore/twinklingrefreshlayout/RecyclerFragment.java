@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.lcodecore.tkrefreshlayout.header.bezierlayout.BezierLayout;
-import com.lcodecore.tkrefreshlayout.v3.TwinklingRefreshLayout;
+import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
 import com.lcodecore.twinklingrefreshlayout.adapter.CardAdapter;
 import com.lcodecore.twinklingrefreshlayout.adapter.ViewPagerHolder;
 import com.lcodecore.twinklingrefreshlayout.beans.Card;
