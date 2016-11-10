@@ -11,6 +11,7 @@ import android.view.animation.DecelerateInterpolator;
 
 import com.lcodecore.tkrefreshlayout.R;
 import com.lcodecore.tkrefreshlayout.IHeaderView;
+import com.lcodecore.tkrefreshlayout.utils.DensityUtil;
 
 /**
  * Created by lcodecore on 2016/10/2.
@@ -18,7 +19,7 @@ import com.lcodecore.tkrefreshlayout.IHeaderView;
 
 public class GoogleDotView extends View implements IHeaderView {
     private Paint mPath;
-    private float r = 12;
+    private float r;
     private int num = 5;
 
     public void setCir_x(int cir_x) {
@@ -47,6 +48,8 @@ public class GoogleDotView extends View implements IHeaderView {
     ValueAnimator animator1, animator2;
 
     private void init() {
+        r = DensityUtil.dp2px(getContext(),4);
+
         mPath = new Paint();
         mPath.setAntiAlias(true);
         mPath.setColor(Color.rgb(114, 114, 114));
@@ -169,8 +172,8 @@ public class GoogleDotView extends View implements IHeaderView {
 
     @Override
     public void onPullingDown(float fraction, float maxHeadHeight, float headHeight) {
-        setScaleX(1 + fraction / 4);
-        setScaleY(1 + fraction / 4);
+        setScaleX(1 + fraction / 2);
+        setScaleY(1 + fraction / 2);
         animating = false;
         if (animator1.isRunning()) {
             animator1.cancel();
@@ -181,8 +184,8 @@ public class GoogleDotView extends View implements IHeaderView {
 
     @Override
     public void onPullReleasing(float fraction, float maxHeadHeight, float headHeight) {
-        setScaleX(1 + fraction / 4);
-        setScaleY(1 + fraction / 4);
+        setScaleX(1 + fraction / 2);
+        setScaleY(1 + fraction / 2);
         if (fraction < 1.0f) {
             animating = false;
             if (animator1.isRunning()) {

@@ -1,6 +1,7 @@
 package com.lcodecore.tkrefreshlayout.header;
 
 import android.content.Context;
+import android.graphics.drawable.AnimationDrawable;
 import android.support.annotation.DrawableRes;
 import android.util.AttributeSet;
 import android.view.View;
@@ -20,7 +21,6 @@ public class SinaRefreshView extends FrameLayout implements IHeaderView {
     private ImageView refreshArrow;
     private ImageView loadingView;
     private TextView refreshTextView;
-    private View rootView;
 
     public SinaRefreshView(Context context) {
         this(context, null);
@@ -32,20 +32,15 @@ public class SinaRefreshView extends FrameLayout implements IHeaderView {
 
     public SinaRefreshView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-
+        init();
     }
 
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-
-        if (rootView == null) {
-            rootView = View.inflate(getContext(), R.layout.view_sinaheader, null);
-            refreshArrow = (ImageView) rootView.findViewById(R.id.iv_arrow);
-            refreshTextView = (TextView) rootView.findViewById(R.id.tv);
-            loadingView = (ImageView) rootView.findViewById(R.id.iv_loading);
-            addView(rootView);
-        }
+    private void init(){
+        View rootView = View.inflate(getContext(), R.layout.view_sinaheader, null);
+        refreshArrow = (ImageView) rootView.findViewById(R.id.iv_arrow);
+        refreshTextView = (TextView) rootView.findViewById(R.id.tv);
+        loadingView = (ImageView) rootView.findViewById(R.id.iv_loading);
+        addView(rootView);
     }
 
     public void setArrowResource(@DrawableRes int resId) {
@@ -78,8 +73,6 @@ public class SinaRefreshView extends FrameLayout implements IHeaderView {
         if (fraction < 1f) refreshTextView.setText(pullDownStr);
         if (fraction > 1f) refreshTextView.setText(releaseRefreshStr);
         refreshArrow.setRotation(fraction * headHeight / maxHeadHeight * 180);
-
-
     }
 
     @Override
@@ -99,6 +92,7 @@ public class SinaRefreshView extends FrameLayout implements IHeaderView {
         refreshTextView.setText(refreshingStr);
         refreshArrow.setVisibility(GONE);
         loadingView.setVisibility(VISIBLE);
+        ((AnimationDrawable)loadingView.getDrawable()).start();
     }
 
     @Override
